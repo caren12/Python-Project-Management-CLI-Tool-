@@ -13,4 +13,4 @@ class User:
         self.projects.append(project)
 
     def __repr__(self):
-        return f"User(id={self.id}, name={self.name}, projects={len(self.projects)})"
+        return f"User(id={self.id}, name={self.name}, email={self.email})"
