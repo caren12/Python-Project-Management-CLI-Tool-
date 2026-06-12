@@ -1,4 +1,4 @@
-import argparse
+import click
 from rich import print
 
 from utils.storage import load_data, save_data
@@ -7,14 +7,24 @@ USERS_FILE = "data/users.json"
 PROJECTS_FILE = "data/projects.json"
 TASKS_FILE = "data/tasks.json"
 
+
+# ---------------- CLI GROUP ----------------
+@click.group()
+def cli():
+    pass
+
+
 # ---------------- USERS ----------------
-def add_user(args):
+@cli.command()
+@click.option("--name", required=True)
+@click.option("--email", required=True)
+def add_user(name, email):
     users = load_data(USERS_FILE)
 
     user = {
         "id": len(users) + 1,
-        "name": args.name,
-        "email": args.email
+        "name": name,
+        "email": email
     }
 
     users.append(user)
@@ -23,21 +33,27 @@ def add_user(args):
     print("[green]User created successfully[/green]")
 
 
-def list_users(args):
+@cli.command()
+def list_users():
     users = load_data(USERS_FILE)
     print(users)
 
 
 # ---------------- PROJECTS ----------------
-def add_project(args):
+@cli.command()
+@click.option("--user", required=True)
+@click.option("--title", required=True)
+@click.option("--description", required=True)
+@click.option("--due_date", required=True)
+def add_project(user, title, description, due_date):
     projects = load_data(PROJECTS_FILE)
 
     project = {
         "id": len(projects) + 1,
-        "user": args.user,
-        "title": args.title,
-        "description": args.description,
-        "due_date": args.due_date
+        "user": user,
+        "title": title,
+        "description": description,
+        "due_date": due_date
     }
 
     projects.append(project)
@@ -46,22 +62,27 @@ def add_project(args):
     print("[blue]Project added successfully[/blue]")
 
 
-def list_projects(args):
+@cli.command()
+@click.option("--user", required=True)
+def list_projects(user):
     projects = load_data(PROJECTS_FILE)
 
     for p in projects:
-        if p["user"] == args.user:
+        if p["user"] == user:
             print(p)
 
 
 # ---------------- TASKS ----------------
-def add_task(args):
+@cli.command()
+@click.option("--project", required=True)
+@click.option("--title", required=True)
+def add_task(project, title):
     tasks = load_data(TASKS_FILE)
 
     task = {
         "id": len(tasks) + 1,
-        "project": args.project,
-        "title": args.title,
+        "project": project,
+        "title": title,
         "status": "pending"
     }
 
@@ -71,72 +92,47 @@ def add_task(args):
     print("[yellow]Task added[/yellow]")
 
 
-def complete_task(args):
-    tasks = load_data(TASKS_FILE)
-
-    for task in tasks:
-        if task["title"] == args.title:
-            task["status"] = "completed"
-
-    save_data(TASKS_FILE, tasks)
-    print("[green]Task completed[/green]")
-
-
-def list_tasks(args):
+@cli.command()
+@click.option("--project", required=True)
+def list_tasks(project):
     tasks = load_data(TASKS_FILE)
 
     for t in tasks:
-        if t["project"] == args.project:
+        if t["project"] == project:
             print(t)
 
 
-# ---------------- CLI SETUP ----------------
-def main():
-    parser = argparse.ArgumentParser(description="Project Management CLI Tool")
-    subparsers = parser.add_subparsers()
+@cli.command()
+@click.option("--title", required=True)
+def complete_task(title):
+    tasks = load_data(TASKS_FILE)
 
-    # add-user
-    p1 = subparsers.add_parser("add-user")
-    p1.add_argument("--name", required=True)
-    p1.add_argument("--email", required=True)
-    p1.set_defaults(func=add_user)
+    for task in tasks:
+        if task["title"] == title:
+            task["status"] = "completed"
 
-    # list-users
-    p2 = subparsers.add_parser("list-users")
-    p2.set_defaults(func=list_users)
+    save_data(TASKS_FILE, tasks)
 
-    # add-project
-    p3 = subparsers.add_parser("add-project")
-    p3.add_argument("--user", required=True)
-    p3.add_argument("--title", required=True)
-    p3.add_argument("--description", required=True)
-    p3.add_argument("--due_date", required=True)
-    p3.set_defaults(func=add_project)
-
-    # list-projects
-    p4 = subparsers.add_parser("list-projects")
-    p4.add_argument("--user", required=True)
-    p4.set_defaults(func=list_projects)
-
-    # add-task
-    p5 = subparsers.add_parser("add-task")
-    p5.add_argument("--project", required=True)
-    p5.add_argument("--title", required=True)
-    p5.set_defaults(func=add_task)
-
-    # list-tasks
-    p6 = subparsers.add_parser("list-tasks")
-    p6.add_argument("--project", required=True)
-    p6.set_defaults(func=list_tasks)
-
-    # complete-task
-    p7 = subparsers.add_parser("complete-task")
-    p7.add_argument("--title", required=True)
-    p7.set_defaults(func=complete_task)
-
-    args = parser.parse_args()
-    args.func(args)
+    print("[green]Task completed[/green]")
 
 
+# ---------------- DELETE TASK (you wanted this earlier) ----------------
+@cli.command()
+@click.option("--id", type=int, required=True)
+def delete_task(id):
+    tasks = load_data(TASKS_FILE)
+
+    new_tasks = [t for t in tasks if t["id"] != id]
+
+    if len(new_tasks) == len(tasks):
+        print(f"[red]Task with id {id} not found[/red]")
+        return
+
+    save_data(TASKS_FILE, new_tasks)
+
+    print(f"[red]Task {id} deleted successfully[/red]")
+
+
+# ---------------- ENTRY POINT ----------------
 if __name__ == "__main__":
-    main()
+    cli()
