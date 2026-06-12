@@ -1,91 +1,162 @@
-Project Management CLI Tool (Click-Based)
+Project Management CLI Tool (Clinic System)
+What this project is
 
-A command-line application built with Python Click for managing users, projects, and tasks.
-This tool simulates a basic clinic or project management system using JSON file storage.
+This is a simple computer program that helps you manage clinic or project work using text commands.
 
+Instead of clicking buttons in a website or app, you type commands in the terminal (a text-based window on your computer).
+
+It helps you:
+
+Add users (for example: staff or system users)
+Create projects (for example: a clinic system or department work)
+Add tasks (things that need to be done)
+Track and complete tasks
+Delete tasks when they are no longer needed
+
+All information is saved on your computer in simple files.
+
+Who this is for
+
+This project is useful for:
+
+Students learning programming
+Beginners practicing Python
+Anyone learning how real systems manage data
+People interested in clinic or task management systems
+How it works (simple explanation)
+
+Think of it like a notebook:
+
+Users are written in one notebook
+Projects are written in another notebook
+Tasks are written in another notebook
+
+Instead of writing by hand, the program writes and updates everything automatically.
+
+When you type a command, the program:
+
+Reads the data file
+Updates it
+Saves it back
 Features
-User management (add, list users)
-Project management (add, list projects)
-Task management (add, list, complete, delete tasks)
-JSON file-based storage (no database required)
-Fast CLI experience using Click
-Tech Stack
-Python 3
-Click (CLI framework)
-Rich (for terminal output styling)
-JSON (data storage)
-Project Structure
+
+You can do the following:
+
+1. Manage users
+Add a new user
+View all users
+2. Manage projects
+Create a project
+View projects linked to a user
+3. Manage tasks
+Add tasks under a project
+View tasks in a project
+Mark tasks as complete
+Delete tasks by ID
+What you need before using it
+
+You need:
+
+A computer
+Python installed
+Basic ability to open a terminal (command window)
+Project structure (what files are inside)
 project/
 │
-├── main.py
+├── main.py                # The main program you run
 ├── utils/
-│   └── storage.py
+│   └── storage.py         # Handles saving and loading data
 │
 ├── data/
-│   ├── users.json
-│   ├── projects.json
-│   └── tasks.json
-│
-└── README.md
-Installation
-1. Clone the project
-git clone <your-repo-url>
-cd project
-2. Create virtual environment (optional but recommended)
-python -m venv venv
-source venv/bin/activate   # Linux/Mac
-venv\Scripts\activate      # Windows
-3. Install dependencies
+│   ├── users.json         # Stores user information
+│   ├── projects.json      # Stores project information
+│   └── tasks.json         # Stores task information
+How to install and run
+Step 1: Install required tools
+
+Open your terminal and run:
+
 pip install click rich
-Running the CLI
+Step 2: Go to the project folder
+cd project
+Step 3: Run the program
 python main.py
-Available Commands
-Users
-Add user
+How to use the system
+
+You type commands like instructions.
+
+USER MANAGEMENT
+Add a user
+
+This creates a new person in the system.
+
 python main.py add-user --name "John Doe" --email "john@example.com"
-List users
+View all users
 python main.py list-users
-Projects
-Add project
+PROJECT MANAGEMENT
+Add a project
+
+A project is like a big task (example: Clinic System).
+
 python main.py add-project --user "John Doe" --title "Clinic System" --description "Hospital management system" --due_date "2026-01-01"
-List projects
+View projects for a user
 python main.py list-projects --user "John Doe"
-Tasks
-Add task
+TASK MANAGEMENT
+Add a task
+
+A task is a small job inside a project.
+
 python main.py add-task --project "Clinic System" --title "Register Patients"
-List tasks
+View tasks
 python main.py list-tasks --project "Clinic System"
-Complete task
+Mark task as completed
 python main.py complete-task --title "Register Patients"
-Delete task
+Delete a task
+
+If a task is no longer needed:
+
 python main.py delete-task --id 2
-Data Storage
+What happens when you run a command
 
-All data is stored locally in JSON files:
+When you type a command:
 
-data/users.json
-data/projects.json
-data/tasks.json
+The program opens the data file
+Finds the correct information
+Updates or adds new data
+Saves everything automatically
 
-Files are automatically updated when commands run.
+You do NOT need to edit files manually.
 
-Design Notes
-Click is used for CLI command handling
-Each entity (users, projects, tasks) is stored separately
-IDs are generated using list length
-Lightweight file-based architecture
+Where your data is stored
+
+All your information is stored in these files:
+
+users.json → stores users
+projects.json → stores projects
+tasks.json → stores tasks
+
+These files act like digital notebooks.
+
+Important notes
+Each item (user, project, task) has a unique ID number
+IDs help the system find and delete items correctly
+If a file is empty or deleted, data will reset
+Everything runs locally on your computer
 Limitations
-No authentication system
-No database (JSON only)
-IDs may reset if files are cleared or reordered
-No concurrency handling
-Future Improvements
-Add SQLite database support
-Add authentication for clinic staff
-Replace users with patients and doctors
-Add appointment scheduling system
-Improve ID generation using UUIDs
-Add search and filtering commands
-Author
 
-Python CLI project for learning Click, CLI design, and file-based data storage.
+This is a learning project, so:
+
+It does not use a database
+It does not have login or security
+It does not support multiple users online
+Data is stored only on one computer
+Future improvements
+
+This system can be improved to:
+
+Add real database storage (like SQLite)
+Add login system for clinic staff
+Replace users with patients and doctors
+Add appointment scheduling
+Add search functionality
+Turn it into a real clinic management system
